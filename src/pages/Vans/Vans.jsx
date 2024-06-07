@@ -3,14 +3,14 @@ import { Link } from "react-router-dom"
 
 export default function Vans() {
     const [vans, setVans] = React.useState([])
-    React.useEffect(() =>{
+    React.useEffect(() => {
         fetch("/api/vans")
-        .then(response => response.json())
-        .then(data => setVans(data.vans))
-    },[])
+            .then(res => res.json())
+            .then(data => setVans(data.vans))
+    }, [])
 
     const vanElements = vans.map(van => (
-      <div key={van.id} className="van-title">
+        <div key={van.id} className="van-tile">
             <Link to={`/vans/${van.id}`}>
                 <img src={van.imageUrl} />
                 <div className="van-info">
@@ -19,9 +19,7 @@ export default function Vans() {
                 </div>
                 <i className={`van-type ${van.type} selected`}>{van.type}</i>
             </Link>
-      </div>
-        
-          
+        </div>
     ))
 
     return (
@@ -31,5 +29,5 @@ export default function Vans() {
                 {vanElements}
             </div>
         </div>
-    );
+    )
 }
