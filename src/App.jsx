@@ -15,7 +15,7 @@ import HostLayout from "./components/HostLayout"
 
 import "./server"
 
-export default function App() {
+function App() {
   return (
     <BrowserRouter>
       <Routes>
