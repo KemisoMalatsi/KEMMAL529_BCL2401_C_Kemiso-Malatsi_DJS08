@@ -6,13 +6,13 @@ export default function HostVans() {
 
     React.useEffect(() => {
         fetch("/api/host/vans")
-            .then(Response => Response.json())
+            .then(res => res.json())
             .then(data => setVans(data.vans))
     }, [])
 
     const hostVansEls = vans.map(van => (
         <Link
-            to={`/host/vans/${van.id}`}
+            to={van.id}
             key={van.id}
             className="host-van-link-wrapper"
         >
