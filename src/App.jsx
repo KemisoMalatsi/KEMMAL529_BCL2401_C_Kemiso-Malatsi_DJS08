@@ -5,11 +5,11 @@ import Home from "./pages/Home"
 import About from "./pages/About"
 import Vans from "./pages/Vans/Vans"
 import VanDetail from "./pages/Vans/VanDetail"
-import Login from "./pages/Vans/Login"
-import Dashboard from "./pages/Host/Dashboard"
-import Income from "./pages/Host/Income"
-import Reviews from "./pages/Host/Reviews"
-import HostVans from "./pages/Host/HostVans"
+import Login from "../src/pages/Vans/Login"
+import Dashboard from "../src/pages/Host/Dashboard"
+import Income from "../src/pages/Host/Income"
+import Reviews from "../src/pages/Host/Reviews"
+import HostVans from "../src/pages/Host/HostVans"
 import HostVanDetail from "./pages/Host/HostVanDetail"
 import HostVanInfo from "./pages/Host/HostVanInfo"
 import HostVanPricing from "./pages/Host/HostVanPricing"
@@ -22,9 +22,7 @@ import AuthRequired from "./components/AuthRequired"
 import "./server"
 
 export default function App() {
-
-
-   return (
+  return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
