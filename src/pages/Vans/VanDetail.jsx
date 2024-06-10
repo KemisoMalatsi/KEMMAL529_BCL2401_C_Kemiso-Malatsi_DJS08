@@ -1,42 +1,88 @@
 import React from "react"
-import { Link, useParams, useLocation } from "react-router-dom"
+import { useParams, Link, NavLink, Outlet } from "react-router-dom"
+import { getHostVans } from "../../api"
 
-export default function VanDetail() {
-    const params = useParams()
-    const location = useLocation()
-    console.log(location)
-    
-    const [van, setVan] = React.useState(null)
+export default function HostVanDetail() {
+    const [currentVan, setCurrentVan] = React.useState(null)
+    const [loading, setLoading] = React.useState(false)
+    const [error, setError] = React.useState(null)
+    const { id } = useParams()
 
     React.useEffect(() => {
-        fetch(`/api/vans/${params.id}`)
-            .then(res => res.json())
-            .then(data => setVan(data.vans))
-    }, [params.id])
+        async function loadVans() {
+            setLoading(true)
+            try {
+                const data = await getHostVans(id)
+                setCurrentVan(data)
+            } catch (err) {
+                setError(err)
+            } finally {
+                setLoading(false)
+            }
+        }
 
-    const search = location.state?.search || ""
-    const type = location.state?.type || "all"
-    
+        loadVans()
+    }, [id])
+
+    if (loading) {
+        return <h1>Loading...</h1>
+    }
+
+    if (error) {
+        return <h1>There was an error: {error.message}</h1>
+    }
+
+    const activeStyles = {
+        fontWeight: "bold",
+        textDecoration: "underline",
+        color: "#161616"
+    }
+
     return (
-        <div className="van-detail-container">
+        <section>
             <Link
-                to={`..${search}`}
+                to=".."
                 relative="path"
                 className="back-button"
-            >&larr; <span>Back to {type} vans</span></Link>
-            
-            {van ? (
-                <div className="van-detail">
-                    <img src={van.imageUrl} />
-                    <i className={`van-type ${van.type} selected`}>
-                        {van.type}
-                    </i>
-                    <h2>{van.name}</h2>
-                    <p className="van-price"><span>${van.price}</span>/day</p>
-                    <p>{van.description}</p>
-                    <button className="link-button">Rent this van</button>
-                </div>
-            ) : <h2>Loading...</h2>}
-        </div>
+            >&larr; <span>Back to all vans</span></Link>
+            {currentVan &&
+                <div className="host-van-detail-layout-container">
+                    <div className="host-van-detail">
+                        <img src={currentVan.imageUrl} />
+                        <div className="host-van-detail-info-text">
+                            <i
+                                className={`van-type van-type-${currentVan.type}`}
+                            >
+                                {currentVan.type}
+                            </i>
+                            <h3>{currentVan.name}</h3>
+                            <h4>${currentVan.price}/day</h4>
+                        </div>
+                    </div>
+
+                    <nav className="host-van-detail-nav">
+                        <NavLink
+                            to="."
+                            end
+                            style={({ isActive }) => isActive ? activeStyles : null}
+                        >
+                            Details
+                    </NavLink>
+                        <NavLink
+                            to="pricing"
+                            style={({ isActive }) => isActive ? activeStyles : null}
+                        >
+                            Pricing
+                    </NavLink>
+                        <NavLink
+                            to="photos"
+                            style={({ isActive }) => isActive ? activeStyles : null}
+                        >
+                            Photos
+                    </NavLink>
+                    </nav>
+                    <Outlet context={{ currentVan }} />
+                </div>}
+        </section>
     )
 }
