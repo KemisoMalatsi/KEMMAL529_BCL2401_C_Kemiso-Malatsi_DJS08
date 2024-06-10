@@ -6,7 +6,7 @@ export default function HostVans() {
 
     React.useEffect(() => {
         fetch("/api/host/vans")
-            .then(res => res.json())
+            .then(Response => Response.json())
             .then(data => setVans(data.vans))
     }, [])
 
